@@ -1,93 +1,29 @@
-export const gridInput = [
-  [2, 5, 0, 0, 3, 0, 9, 0, 1],
-  [0, 1, 0, 0, 0, 4, 0, 0, 0],
-  [4, 0, 7, 0, 0, 0, 2, 0, 8],
-  [0, 0, 5, 2, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 9, 8, 1, 0, 0],
-  [0, 4, 0, 0, 0, 3, 0, 0, 0],
-  [0, 0, 0, 3, 6, 0, 0, 7, 2],
-  [0, 7, 0, 0, 0, 0, 0, 0, 3],
-  [9, 0, 3, 0, 0, 0, 6, 0, 4],
-];
+import { isValidNumber } from "./isValidNumber";
+import { findEmpty } from "./findEmpty";
 
-export const grid = [
-  [0, 0, 0, 0, 0, 0, 9, 0, 1],
-  [0, 1, 0, 0, 0, 4, 0, 0, 0],
-  [4, 0, 7, 0, 0, 0, 2, 0, 8],
-  [0, 0, 5, 2, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 9, 8, 1, 0, 0],
-  [0, 4, 0, 0, 0, 3, 0, 0, 0],
-  [0, 0, 0, 3, 6, 0, 0, 7, 2],
-  [0, 7, 0, 0, 0, 0, 0, 0, 3],
-  [9, 0, 3, 0, 0, 0, 6, 0, 4],
-];
 
-export const isValidNumber = ({
-  grid,
-  xPosition,
-  yPosition,
-  number,
-}: {
-  grid: number[][];
-  xPosition: number;
-  yPosition: number;
-  number: number;
-}) => {
-  const target = grid[yPosition][xPosition];
+//Global variable used for termination of solveSudokuRecursion function
+let running = false
 
-  if (target !== 0) {
-    return Error("Not empty");
-  }
+export const setRunning = (value: boolean) => {
+  running = value
+  return value
+}
 
-  //check row
-  const activeRow = grid[yPosition];
-  const rowIncludes = activeRow.includes(number);
-  if (rowIncludes) {
-    return false;
-  }
+let delay = 10
 
-  //check column
-  const activeColumn = grid.map((row) => row[xPosition]);
-  const columnIncludes = activeColumn.includes(number);
-  if (columnIncludes) {
-    return false;
-  }
-
-  //check square
-  const xStartSquare = 3 * Math.floor(xPosition / 3);
-  const yStartSquare = 3 * Math.floor(yPosition / 3);
-
-  for (let y = yStartSquare; y < yStartSquare + 3; y += 1) {
-    for (let x = xStartSquare; x < xStartSquare + 3; x += 1) {
-      if (grid[y][x] === number) {
-        return false;
-      }
-    }
-  }
-
-  return true;
-};
-
-export const findEmpty = (grid: number[][]) => {
-  for (let y = 0; y < grid.length; y += 1) {
-    for (let x = 0; x < grid.length; x += 1) {
-      if (grid[y][x] === 0) {
-        return { x, y };
-      }
-    }
-  }
-  return null;
-};
+export const setDelay = (value: number) => {
+  delay = value
+}
 
 const solveSudokuRecursion = async (
   grid: number[][],
   setGridState: (grid: number[][], x: number, y: number) => void
 ) => {
-  await new Promise((resolve) => setTimeout(resolve, 1));
+  await new Promise((resolve) => setTimeout(resolve, delay));
 
   const emptyPlace = findEmpty(grid);
   if (!emptyPlace) {
-    console.log("final grid", grid);
     return true;
   }
 
@@ -98,12 +34,12 @@ const solveSudokuRecursion = async (
       yPosition: emptyPlace.y,
       number: testNumber,
     });
-    console.log(grid);
+    if(!running){
+      return
+    }
     if (isTestNumberValid) {
-      console.log("valid");
       grid[emptyPlace.y][emptyPlace.x] = testNumber;
       setGridState(grid, emptyPlace.x, emptyPlace.y);
-      console.log("new grid", emptyPlace.y, emptyPlace.x, testNumber, grid);
       if (await solveSudokuRecursion(grid, setGridState)) {
         return true;
       }
