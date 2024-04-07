@@ -1,0 +1,13 @@
+.cell{
+    width: 2em;
+    aspect-ratio: 1;
+    border: solid 1px gray;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    -webkit-user-select: auto;
+    user-select: auto;
+    -webkit-user-drag: none;
+  }

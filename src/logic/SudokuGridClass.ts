@@ -1,8 +1,12 @@
-class SudokuGrid{
+export class SudokuGrid{
     grid: number[][];
     constructor(){
-        const row = new Array(9).fill(0)
-        this.grid = new Array(9).fill(row)
+        const array = []
+        for (let y = 0; y < 9; y += 1) {
+            const row = new Array(9).fill(0)
+            array.push(row)
+        }
+        this.grid = array
     }
 
     setGridValue({x, y, newValue}: {x: number, y: number, newValue: number}){
@@ -12,6 +16,7 @@ class SudokuGrid{
     findEmpty = () => {
         for (let y = 0; y < 9; y += 1) {
           for (let x = 0; x < 9; x += 1) {
+            console.log(this.grid[y][x])
             if (this.grid[y][x] === 0) {
               return { x, y };
             }
@@ -20,18 +25,23 @@ class SudokuGrid{
         return null;
     }
 
-    isValidNumber = ({testY, testX, testValue}: {testY: number, testX: number, testValue: number}) => {
+    isValidNumber = ({testX, testY, testValue}: {testX: number, testY: number, testValue: number}) => {
         //check row
-        for(let x = 0; x< 9; x+=1){
-            if(x === testX) continue // ignore its own position
-            if(this.grid[x][testY] === testValue) return false
+        for(let x = 0; x < 9; x+=1){
+            if(this.grid[testY][x] === testValue){
+                console.log(this.grid, testValue)
+                console.log('R')
+                return false
+            } 
             
         }
 
         //check column
         for(let y = 0; y< 9; y+=1){
-            if(y === testY) continue
-            if(this.grid[y][testX] === testValue) return false
+            if(this.grid[y][testX] === testValue){
+                console.log('C')
+                return false
+            } 
         }
 
         //check square
@@ -40,10 +50,14 @@ class SudokuGrid{
         for (let y = yStartSquare; y < yStartSquare + 3; y += 1) {
             for (let x = xStartSquare; x < xStartSquare + 3; x += 1) {
                 const isTestPosition = y === testY && x === testX
-                if (this.grid[y][x] === testValue && !isTestPosition) return false;
+                if (this.grid[y][x] === testValue && !isTestPosition) {
+                    console.log('S')
+                    return false
+                } 
             }
         }
 
         return true
     }
 }
+
