@@ -5,6 +5,7 @@ import Grid from "./Components/Grid/Grid";
 import { gridInput } from "./logic/gridExample";
 
 const sudokuInstance = new SudokuSolverRealTime();
+sudokuInstance.grid = gridInput;
 
 function Sudoku() {
   const [gridState, setGridState] = useState(
@@ -21,7 +22,7 @@ function Sudoku() {
   };
 
   useEffect(() => {
-    sudokuInstance.setUpdateGridReactState(updateGridState);
+    //sudokuInstance.setUpdateGridReactState(updateGridState);
   }, []);
 
   const updateGrid = (yIndex: number, xIndex: number, value: string) => {
@@ -43,9 +44,7 @@ function Sudoku() {
   };
 
   const solve = () => {
-    console.log(sudokuInstance.grid);
-    sudokuInstance.running = true;
-    sudokuInstance.solveSudokuRecursion();
+    sudokuInstance.startSolving();
   };
 
   return (

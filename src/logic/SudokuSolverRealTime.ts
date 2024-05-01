@@ -16,22 +16,24 @@ export class SudokuSolverRealTime extends SudokuGrid{
         this.updateGridReactState = updateGridState
     }
 
-    startSolving = () => {
+    startSolving = async () => {
         console.log(this.grid)
         this.running = true
         const originalGrid = structuredClone(this.grid)
-        const result = this.solveSudokuRecursion()
+        const start = performance.now()
+        const result = await this.solveSudokuRecursion()
+        const end = performance.now()
+        console.log('it takes', end - start)
+        console.log(this.grid)
         if(!result){
             this.grid = originalGrid
         }
     }
 
     solveSudokuRecursion = async () => {
-        console.log(this.grid)
         if(!this.running) return
         //await new Promise((resolve) => setTimeout(resolve, this.delay));
         const emptyPlace = this.findEmpty()
-        console.log( emptyPlace)
         if(!emptyPlace){
             return true;
         }
@@ -40,12 +42,10 @@ export class SudokuSolverRealTime extends SudokuGrid{
             const isTestNumberValid = this.isValidNumber({testX: emptyPlace.x, testY: emptyPlace.y, testValue: testNumber});
             if (isTestNumberValid) {
                 this.grid[emptyPlace.y][emptyPlace.x] = testNumber;
-                console.log(JSON.stringify(this.grid), testNumber, emptyPlace)
                 if(this.updateGridReactState !== null){
                     this.updateGridReactState(emptyPlace.x, emptyPlace.y, this.grid)
                 }
                 const nextIterationIsValid = await this.solveSudokuRecursion()
-                console.log(nextIterationIsValid)
                 if (nextIterationIsValid) {
                     return true;
                 }

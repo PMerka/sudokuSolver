@@ -13,10 +13,19 @@ export class SudokuGrid{
         this.grid[y][x] = newValue
     }
 
+    cleanGrid = () => {
+        const array = []
+        for (let y = 0; y < 9; y += 1) {
+            const row = new Array(9).fill(0)
+            array.push(row)
+        }
+        console.log('array', array)
+        this.grid = array
+    }
+
     findEmpty = () => {
         for (let y = 0; y < 9; y += 1) {
           for (let x = 0; x < 9; x += 1) {
-            console.log(this.grid[y][x])
             if (this.grid[y][x] === 0) {
               return { x, y };
             }
@@ -29,8 +38,6 @@ export class SudokuGrid{
         //check row
         for(let x = 0; x < 9; x+=1){
             if(this.grid[testY][x] === testValue){
-                console.log(this.grid, testValue)
-                console.log('R')
                 return false
             } 
             
@@ -39,7 +46,6 @@ export class SudokuGrid{
         //check column
         for(let y = 0; y< 9; y+=1){
             if(this.grid[y][testX] === testValue){
-                console.log('C')
                 return false
             } 
         }
@@ -51,7 +57,6 @@ export class SudokuGrid{
             for (let x = xStartSquare; x < xStartSquare + 3; x += 1) {
                 const isTestPosition = y === testY && x === testX
                 if (this.grid[y][x] === testValue && !isTestPosition) {
-                    console.log('S')
                     return false
                 } 
             }
