@@ -1,5 +1,9 @@
 import { SudokuGrid } from "./SudokuGridClass";
 
+/**
+ * Helper function returns random all positions 
+ * in sudoku grid {x, y} in array in random order
+ */
 export const getRandomPositions = () => {
     const positions = []
     for(let y = 0; y < 9; y += 1){
@@ -23,7 +27,6 @@ export class SudokuGenerator extends SudokuGrid {
   allowedValues: number[][][];
   numberOfSolutions: number;
   checkIfIsUnique: boolean;
-  solution: number;
 
   constructor() {
     super();
@@ -32,8 +35,7 @@ export class SudokuGenerator extends SudokuGrid {
     this.running = false;
     this.allowedValues = this.getAllowedValues();
     this.numberOfSolutions = 0;
-    this.checkIfIsUnique = false;
-    this.solution = 0;
+    this.checkIfIsUnique = false; // sets if algorithm should check if solution is unique
   }
 
   setGrid = (grid: number[][]) => {
@@ -52,7 +54,7 @@ export class SudokuGenerator extends SudokuGrid {
     }
   };
 
-  //get all values possible in empty places and save them for the use in solveSudokuRecursion
+  //get all values possible in empty places in grid and save them for the use in solveSudokuRecursion
   getAllowedValues = () => {
     const allowedValues = this.grid.map((row, y) =>
       row.map((value, x) => {
@@ -75,8 +77,8 @@ export class SudokuGenerator extends SudokuGrid {
   solveSudokuRecursion = () => {
     const emptyPlace = this.findEmpty();
     if (!emptyPlace) {
-      if (this.checkIfIsUnique && this.solution < 2) {
-        this.solution += 1;
+      if (this.checkIfIsUnique && this.numberOfSolutions < 2) {
+        this.numberOfSolutions += 1;
         return false;
       }
       return true;
@@ -105,33 +107,32 @@ export class SudokuGenerator extends SudokuGrid {
     return false;
   };
 
-  startSolving = () => {
+  generatePuzzle = () => {
       this.checkIfIsUnique = false;
-      this.solution = 0;
+      this.numberOfSolutions = 0;
       this.getAllowedValues();
       this.randomizeOrderOfAllowedValues();
       console.log("array generated", JSON.stringify(this.grid));
       this.solveSudokuRecursion();
       console.log(this.grid);
-      const gridInit = structuredClone(this.grid);
 
      const randomPositions = getRandomPositions()
 
      for(const position of randomPositions){
-        this.solution = 0;
+        this.numberOfSolutions = 0;
         this.getAllowedValues();
         const backup = structuredClone(this.grid);
         this.grid[position.y][position.x] = 0
         this.checkIfIsUnique = true;
         this.solveSudokuRecursion();
         this.grid = structuredClone(backup)
-        if(this.solution === 1){
+        if(this.numberOfSolutions === 1){
             this.grid[position.y][position.x] = 0
         }
         console.log(this.grid)
      }
 
      console.log('FINAL', this.grid)
-
+     return this.grid
   };
 }

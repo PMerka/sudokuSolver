@@ -1,0 +1,15 @@
+.row{
+    display: flex;
+}
+
+.grid{
+    max-width: 600px;
+}
+
+.row:first-child{
+    border-top: solid 3px gray;
+}
+
+.row:nth-child(3n){
+    border-bottom: solid 3px gray;
+}

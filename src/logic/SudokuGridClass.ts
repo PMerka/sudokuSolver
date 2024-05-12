@@ -19,7 +19,6 @@ export class SudokuGrid{
             const row = new Array(9).fill(0)
             array.push(row)
         }
-        console.log('array', array)
         this.grid = array
     }
 
@@ -40,7 +39,6 @@ export class SudokuGrid{
             if(this.grid[testY][x] === testValue){
                 return false
             } 
-            
         }
 
         //check column
